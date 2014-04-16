@@ -1,0 +1,9 @@
+/Makefile
+/blib
+/docs
+/pm_to_blib
+/MANIFEST.bak
+/install_tmp
+/setup.log
+/nytprof.out
+/nytprof
