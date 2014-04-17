@@ -4,6 +4,7 @@ use Sanger::CGP::Vcf;
 our $VERSION = Sanger::CGP::Vcf->VERSION;
 
 use strict;
+use Carp qw(croak);
 use warnings FATAL => 'all';
 
 1;
@@ -56,15 +57,29 @@ sub checksum{
 
 sub compare{
 	my($self,$contig) = @_;
+	croak 'Incorrect input' unless ref $contig eq 'Sanger::CGP::Vcf::Contig';
 
-	my $same = 1;
-	$same = 0 unless ref $contig eq 'Sanger::CGP::Pindel::OutputGen::Contig';
-	$same = 0 unless $contig->name eq $self->{_name};
-	$same = 0 unless $contig->length eq $self->{_length};
-	$same = 0 unless $contig->assembly eq $self->{_assembly};
-	$same = 0 unless $contig->species eq $self->{_species};
-	if(defined ($contig->checksum) && defined ($self->{_checksum})){
-		$same = 0 unless $contig->checksum eq $self->{_checksum};
-	}
-	return $same;
+  # check for defined mismatch
+  return 0 if((defined $contig->name      ? 1 : 0) != (defined $self->{_name}     ? 1 : 0));
+  return 0 if((defined $contig->length    ? 1 : 0) != (defined $self->{_length}   ? 1 : 0));
+  return 0 if((defined $contig->assembly  ? 1 : 0) != (defined $self->{_assembly} ? 1 : 0));
+  return 0 if((defined $contig->species   ? 1 : 0) != (defined $self->{_species}  ? 1 : 0));
+  return 0 if((defined $contig->checksum  ? 1 : 0) != (defined $self->{_checksum} ? 1 : 0));
+
+  return 0 if defined $self->{_name} && $contig->name ne $self->{_name};
+	return 0 if defined $self->{_length} && $contig->length != $self->{_length};
+	return 0 if defined $self->{_assembly} && $contig->assembly ne $self->{_assembly};
+	return 0 if defined $self->{_species} && $contig->species ne $self->{_species};
+	return 0 if defined $self->{_checksum} && $contig->checksum ne $self->{_checksum};
+
+  return 1;
+
+#	$same = 0 unless $contig->name eq $self->{_name};
+#	$same = 0 unless $contig->length eq $self->{_length};
+#	$same = 0 unless $contig->assembly eq $self->{_assembly};
+#	$same = 0 unless $contig->species eq $self->{_species};
+#	if(defined ($contig->checksum) && defined ($self->{_checksum})){
+#		$same = 0 unless $contig->checksum eq $self->{_checksum};
+#	}
+#	return $same;
 }
