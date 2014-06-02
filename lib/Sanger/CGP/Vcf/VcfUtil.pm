@@ -8,6 +8,8 @@ use warnings FATAL => 'all';
 use Carp;
 use Vcf;
 
+1;
+
 =head gen_tn_vcf_header
 
 A string generator for generating a uniform header section for NORMAL/TUMOUR comparisons. Useful if you do not want to include the VcfTools lib.
@@ -125,9 +127,6 @@ sub add_vcf_sample{
 	$input_hash{Accession} = $sample->accession if $sample->accession;
 	$input_hash{Platform} = $sample->platform if $sample->platform;
 	$input_hash{Protocol} = $sample->seq_protocol if $sample->seq_protocol;
-
-
-
 
 	$vcf->add_header_line(\%input_hash);
 	$vcf->add_columns( $id );
