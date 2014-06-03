@@ -24,10 +24,8 @@ Other Software
       yum install
         zlib-devel
         gcc-c++
-        boost-devel.x86_64
         ncurses-devel.x86_64
 
   setup.sh will install
     Tabix
     vcftools
-
