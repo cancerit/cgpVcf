@@ -25,6 +25,6 @@ package Sanger::CGP::Vcf;
 use strict;
 use Const::Fast qw(const);
 
-our $VERSION = '0.0.1';
+our $VERSION = '1.0.0';
 
 1;
