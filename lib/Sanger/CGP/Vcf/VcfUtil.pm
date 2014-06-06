@@ -36,11 +36,11 @@ use Vcf;
 
 A string generator for generating a uniform header section for NORMAL/TUMOUR comparisons. Useful if you do not want to include the VcfTools lib.
 
-@param1 wt_sample      - a Sanger::CGP::Pindel::OutputGen::Sample object representing the wild type sample.
+@param1 wt_sample      - a Sanger::CGP::Vcf::Sample object representing the wild type sample.
 
-@param2 mt_sample      - a Sanger::CGP::Pindel::OutputGen::Sample object representing the mutant type sample.
+@param2 mt_sample      - a Sanger::CGP::Vcf::Sample object representing the mutant type sample.
 
-@param3 contigs        - an array-ref of Sanger::CGP::Pindel::OutputGen::Contig object.
+@param3 contigs        - an array-ref of Sanger::CGP::Vcf::Contig object.
 
 @param4 process_logs   - an array-ref of Sanger::CGP::Vcf::VcfProcessLog objects.
 
