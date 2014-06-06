@@ -42,15 +42,17 @@ A string generator for generating a uniform header section for NORMAL/TUMOUR com
 
 @param3 contigs        - an array-ref of Sanger::CGP::Pindel::OutputGen::Contig object.
 
-@param4 reference_name - a String containing the name of the reference used in the VCF.
+@param4 process_logs   - an array-ref of Sanger::CGP::Vcf::VcfProcessLog objects.
 
-@param5 input_source   - a String containing the name and version of the application or source of the VCF data.
+@param5 reference_name - a String containing the name of the reference used in the VCF.
 
-@param6 info           - an array-ref of hash-refs containing VCF formatted INFO data.
+@param6 input_source   - a String containing the name and version of the application or source of the VCF data.
 
-@param7 format         - an array-ref of hash-refs containing VCF formatted FORMAT data.
+@param7 info           - an array-ref of hash-refs containing VCF formatted INFO data.
 
-@param8 other          - an array-ref of hash-refs containing VCF formatted header data.
+@param8 format         - an array-ref of hash-refs containing VCF formatted FORMAT data.
+
+@param9 other          - an array-ref of hash-refs containing VCF formatted header data.
 
 @returns               - String containing a fully formatted VCF header.
 
