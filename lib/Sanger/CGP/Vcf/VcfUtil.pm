@@ -1,23 +1,23 @@
 package Sanger::CGP::Vcf::VcfUtil;
 
 ##########LICENCE##########
-# Copyright (c) 2014 Genome Research Ltd. 
-#  
-# Author: Jon Hinton <cgpit@sanger.ac.uk> 
-#  
-# This file is part of cgpVcf. 
-#  
-# cgpVcf is free software: you can redistribute it and/or modify it under 
-# the terms of the GNU Affero General Public License as published by the Free 
-# Software Foundation; either version 3 of the License, or (at your option) any 
-# later version. 
-#  
-# This program is distributed in the hope that it will be useful, but WITHOUT 
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
-# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more 
-# details. 
-#  
-# You should have received a copy of the GNU Affero General Public License 
+# Copyright (c) 2014 Genome Research Ltd.
+#
+# Author: Jon Hinton <cgpit@sanger.ac.uk>
+#
+# This file is part of cgpVcf.
+#
+# cgpVcf is free software: you can redistribute it and/or modify it under
+# the terms of the GNU Affero General Public License as published by the Free
+# Software Foundation; either version 3 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 ##########LICENCE##########
 
@@ -197,7 +197,7 @@ sub add_vcf_process_log{
 	$input_hash{InputVCFSource} = $process_log->input_vcf_source if $process_log->input_vcf_source;
 	$input_hash{InputVCFVer} = $process_log->input_vcf_ver if $process_log->input_vcf_ver;
 	$input_hash{InputVCFParam} = $process_log->input_vcf_params if $process_log->input_vcf_params;
-	$vcf->add_header_line(\%input_hash);
+	$vcf->add_header_line(\%input_hash, append => 1);
 }
 
 sub get_date {
