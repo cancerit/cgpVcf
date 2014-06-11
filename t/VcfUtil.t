@@ -1,21 +1,21 @@
 ##########LICENCE##########
-# Copyright (c) 2014 Genome Research Ltd. 
-#  
-# Author: Jon Hinton <cgpit@sanger.ac.uk> 
-#  
-# This file is part of cgpVcf. 
-#  
-# cgpVcf is free software: you can redistribute it and/or modify it under 
-# the terms of the GNU Affero General Public License as published by the Free 
-# Software Foundation; either version 3 of the License, or (at your option) any 
-# later version. 
-#  
-# This program is distributed in the hope that it will be useful, but WITHOUT 
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
-# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more 
-# details. 
-#  
-# You should have received a copy of the GNU Affero General Public License 
+# Copyright (c) 2014 Genome Research Ltd.
+#
+# Author: Jon Hinton <cgpit@sanger.ac.uk>
+#
+# This file is part of cgpVcf.
+#
+# cgpVcf is free software: you can redistribute it and/or modify it under
+# the terms of the GNU Affero General Public License as published by the Free
+# Software Foundation; either version 3 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 ##########LICENCE##########
 
@@ -44,11 +44,11 @@ subtest 'Non-object funcions' => sub {
     my $exp7 = q{##fileformat=VCFv4.1
 ##SAMPLE=<ID=test_wt,SampleName=test_wt>
 ##SAMPLE=<ID=test_wt_2,SampleName=test_wt_2,Study=test_study>
-##SAMPLE=<ID=test_wt_3,SampleName=test_wt_3,Study=test_study,Protocol=protocol1>
-##SAMPLE=<ID=test_wt_4,SampleName=test_wt_4,Study=test_study,Protocol=protocol1,Source=COSMIC>
-##SAMPLE=<ID=test_wt_5,SampleName=test_wt_5,Description="Blah Blah Blah",Study=test_study,Source=COSMIC,Protocol=protocol1>
-##SAMPLE=<ID=test_wt_6,SampleName=test_wt_6,Description="Blah Blah Blah",Study=test_study,Source=COSMIC,Accession=COS_1231,Protocol=protocol1>
-##SAMPLE=<ID=test_wt_7,SampleName=test_wt_7,Description="Blah Blah Blah",Study=test_study,Source=COSMIC,Accession=COS_1231,Platform=plat1,Protocol=protocol1>
+##SAMPLE=<ID=test_wt_3,Protocol=protocol1,SampleName=test_wt_3,Study=test_study>
+##SAMPLE=<ID=test_wt_4,Protocol=protocol1,SampleName=test_wt_4,Source=COSMIC,Study=test_study>
+##SAMPLE=<ID=test_wt_5,Description="Blah Blah Blah",Protocol=protocol1,SampleName=test_wt_5,Source=COSMIC,Study=test_study>
+##SAMPLE=<ID=test_wt_6,Description="Blah Blah Blah",Accession=COS_123,Protocol=protocol1,SampleName=test_wt_6,Source=COSMIC,Study=test_study>
+##SAMPLE=<ID=test_wt_7,Description="Blah Blah Blah",Accession=COS_123,Platform=plat1,Protocol=protocol1,SampleName=test_wt_7,Source=COSMIC,Study=test_study>
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	test_wt	test_wt_2	test_wt_3	test_wt_4	test_wt_5	test_wt_6	test_wt_7
 };
 
@@ -94,7 +94,7 @@ subtest 'Non-object funcions' => sub {
    		my $expected_line = shift @exp1_bits;
    		is_deeply(header_to_hash($got_line),header_to_hash($got_line),'Checking header line');
    	}
-  	#is_deeply([split "\n", $vcf->format_header],[split "\n",$exp7],'Check Sample on header string');
+  	is_deeply([split "\n", $vcf->format_header],[split "\n",$exp7],'Check Sample on header string');
 
   };
 
@@ -161,8 +161,18 @@ qq{##fileformat=VCFv4.1
 ##SAMPLE=<ID=TUMOUR,SampleName=test_mt>
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NORMAL	TUMOUR
 };
-	is_deeply([split "\n", Sanger::CGP::Vcf::VcfUtil::gen_tn_vcf_header($wt_sample, $mt_sample, $contigs, \@process_logs, $reference_name, $input_source, $info, $format, $other, "\n")],[split "\n",$exp1],'Header string construction');
 
+  my @got = split "\n", Sanger::CGP::Vcf::VcfUtil::gen_tn_vcf_header($wt_sample, $mt_sample, $contigs, \@process_logs, $reference_name, $input_source, $info, $format, $other, "\n");
+  my @expected = split "\n",$exp1;
+  is(scalar @got, scalar @expected, 'Check headers are same size');
+  for my $i(0..(scalar @got)-1) {
+    my $got_line = $got[$i];
+    my $exp_line = $expected[$i];
+    if($got_line =~ m/^##vcfProcessLog/) {
+      $got_line =~ s/^(##vcfProcessLog)[^=]+/\1/;
+    }
+    is($got_line, $exp_line, 'Header lines match');
+  }
   };
 
 };

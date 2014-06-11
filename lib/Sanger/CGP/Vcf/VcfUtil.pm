@@ -1,23 +1,23 @@
 package Sanger::CGP::Vcf::VcfUtil;
 
 ##########LICENCE##########
-# Copyright (c) 2014 Genome Research Ltd. 
-#  
-# Author: Jon Hinton <cgpit@sanger.ac.uk> 
-#  
-# This file is part of cgpVcf. 
-#  
-# cgpVcf is free software: you can redistribute it and/or modify it under 
-# the terms of the GNU Affero General Public License as published by the Free 
-# Software Foundation; either version 3 of the License, or (at your option) any 
-# later version. 
-#  
-# This program is distributed in the hope that it will be useful, but WITHOUT 
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
-# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more 
-# details. 
-#  
-# You should have received a copy of the GNU Affero General Public License 
+# Copyright (c) 2014 Genome Research Ltd.
+#
+# Author: Jon Hinton <cgpit@sanger.ac.uk>
+#
+# This file is part of cgpVcf.
+#
+# cgpVcf is free software: you can redistribute it and/or modify it under
+# the terms of the GNU Affero General Public License as published by the Free
+# Software Foundation; either version 3 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 ##########LICENCE##########
 
@@ -36,21 +36,23 @@ use Vcf;
 
 A string generator for generating a uniform header section for NORMAL/TUMOUR comparisons. Useful if you do not want to include the VcfTools lib.
 
-@param1 wt_sample      - a Sanger::CGP::Pindel::OutputGen::Sample object representing the wild type sample.
+@param1 wt_sample      - a Sanger::CGP::Vcf::Sample object representing the wild type sample.
 
-@param2 mt_sample      - a Sanger::CGP::Pindel::OutputGen::Sample object representing the mutant type sample.
+@param2 mt_sample      - a Sanger::CGP::Vcf::Sample object representing the mutant type sample.
 
-@param3 contigs        - an array-ref of Sanger::CGP::Pindel::OutputGen::Contig object.
+@param3 contigs        - an array-ref of Sanger::CGP::Vcf::Contig object.
 
-@param4 reference_name - a String containing the name of the reference used in the VCF.
+@param4 process_logs   - an array-ref of Sanger::CGP::Vcf::VcfProcessLog objects.
 
-@param5 input_source   - a String containing the name and version of the application or source of the VCF data.
+@param5 reference_name - a String containing the name of the reference used in the VCF.
 
-@param6 info           - an array-ref of hash-refs containing VCF formatted INFO data.
+@param6 input_source   - a String containing the name and version of the application or source of the VCF data.
 
-@param7 format         - an array-ref of hash-refs containing VCF formatted FORMAT data.
+@param7 info           - an array-ref of hash-refs containing VCF formatted INFO data.
 
-@param8 other          - an array-ref of hash-refs containing VCF formatted header data.
+@param8 format         - an array-ref of hash-refs containing VCF formatted FORMAT data.
+
+@param9 other          - an array-ref of hash-refs containing VCF formatted header data.
 
 @returns               - String containing a fully formatted VCF header.
 
@@ -195,7 +197,7 @@ sub add_vcf_process_log{
 	$input_hash{InputVCFSource} = $process_log->input_vcf_source if $process_log->input_vcf_source;
 	$input_hash{InputVCFVer} = $process_log->input_vcf_ver if $process_log->input_vcf_ver;
 	$input_hash{InputVCFParam} = $process_log->input_vcf_params if $process_log->input_vcf_params;
-	$vcf->add_header_line(\%input_hash);
+	$vcf->add_header_line(\%input_hash, append => 1);
 }
 
 sub get_date {
