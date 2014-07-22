@@ -76,14 +76,21 @@ sub parse_contigs{
 }
 
 sub parse_samples{
-  my($self,$header_txt,$study,$protocol,$accession,$accession_source,$description) = @_;
+  my($self,$header_txt,$study,$protocol,$accession,$accession_source,$description,$platform_in) = @_;
 
   my $samples = {};
 
   foreach my $line (split(/\n/,$header_txt)){
     if($line =~ /^\@RG/){
       my ($name) = $line =~ /SM:([^\t]+)/;
-      my ($platform) = $line =~ /PL:([^\t]+)/;
+      my $platform;
+      if($line =~ /PL:([^\t]+)/) {
+        $platform = $1;
+        die "ERROR: Manually entered platform ($platform_in) doesn't match BAM file header ($platform)" if(defined $platform && $platform ne $platform_in);
+      }
+      else {
+        $platform = $platform_in;
+      }
 
       $samples->{$name} = new Sanger::CGP::Vcf::Sample(
         -name => $name,
