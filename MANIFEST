@@ -1,8 +1,10 @@
 docs.tar.gz
 INSTALL
 lib/Sanger/CGP/Vcf.pm
+lib/Sanger/CGP/Vcf/BamUtil.pm
 lib/Sanger/CGP/Vcf/Contig.pm
 lib/Sanger/CGP/Vcf/Sample.pm
+lib/Sanger/CGP/Vcf/VCFCNConverter.pm
 lib/Sanger/CGP/Vcf/VcfProcessLog.pm
 lib/Sanger/CGP/Vcf/VcfUtil.pm
 LICENCE
@@ -16,4 +18,13 @@ prerelease.sh
 README.md
 setup.sh
 t/1_pm_compile.t
+t/VCFCNConverter.t
 t/VcfUtil.t
+testData/genome_22.fa
+testData/genome_22.fa.fai
+testData/test_segments.txt
+testData/test_segments_bad.txt
+testData/TESTMUT.bam
+testData/TESTMUT.bam.bai
+testData/TESTNORM.bam
+testData/TESTNORM.bam.bai
