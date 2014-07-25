@@ -1,0 +1,60 @@
+##fileformat=VCFv4.1
+##fileDate=20120915
+##source_20120915.1=CavemanMerge2Vcf.pl
+##reference=genome.fa
+##contig=<ID=11,assembly=GRCh37,length=135006516,species=HUMAN>
+##contig=<ID=21,assembly=GRCh37,length=48129895,species=HUMAN>
+##contig=<ID=7,assembly=GRCh37,length=159138663,species=HUMAN>
+##contig=<ID=Y,assembly=GRCh37,length=59373566,species=HUMAN>
+##contig=<ID=17,assembly=GRCh37,length=81195210,species=HUMAN>
+##contig=<ID=2,assembly=GRCh37,length=243199373,species=HUMAN>
+##contig=<ID=22,assembly=GRCh37,length=51304566,species=HUMAN>
+##contig=<ID=1,assembly=GRCh37,length=249250621,species=HUMAN>
+##contig=<ID=18,assembly=GRCh37,length=78077248,species=HUMAN>
+##contig=<ID=16,assembly=GRCh37,length=90354753,species=HUMAN>
+##contig=<ID=13,assembly=GRCh37,length=115169878,species=HUMAN>
+##contig=<ID=6,assembly=GRCh37,length=171115067,species=HUMAN>
+##contig=<ID=X,assembly=GRCh37,length=155270560,species=HUMAN>
+##contig=<ID=3,assembly=GRCh37,length=198022430,species=HUMAN>
+##contig=<ID=MT,assembly=GRCh37,length=16569,species=HUMAN>
+##contig=<ID=9,assembly=GRCh37,length=141213431,species=HUMAN>
+##contig=<ID=12,assembly=GRCh37,length=133851895,species=HUMAN>
+##contig=<ID=20,assembly=GRCh37,length=63025520,species=HUMAN>
+##contig=<ID=14,assembly=GRCh37,length=107349540,species=HUMAN>
+##contig=<ID=15,assembly=GRCh37,length=102531392,species=HUMAN>
+##contig=<ID=8,assembly=GRCh37,length=146364022,species=HUMAN>
+##contig=<ID=4,assembly=GRCh37,length=191154276,species=HUMAN>
+##contig=<ID=19,assembly=GRCh37,length=59128983,species=HUMAN>
+##contig=<ID=10,assembly=GRCh37,length=135534747,species=HUMAN>
+##contig=<ID=5,assembly=GRCh37,length=180915260,species=HUMAN>
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Total Depth">
+##INFO=<ID=MP,Number=1,Type=Float,Description="Sum of CaVEMan somatic genotype probabilities">
+##INFO=<ID=GP,Number=1,Type=Float,Description="Sum of CaVEMan germline genotype probabilities">
+##INFO=<ID=TG,Number=1,Type=String,Description="Most probable genotype as called by CaVEMan">
+##INFO=<ID=TP,Number=1,Type=Float,Description="Probability of most probable genotype as called by CaVEMan">
+##INFO=<ID=SG,Number=1,Type=String,Description="2nd most probable genotype as called by CaVEMan">
+##INFO=<ID=SP,Number=1,Type=Float,Description="Probability of 2nd most probable genotype as called by CaVEMan">
+##INFO=<ID=DS,Number=.,Type=String,Description="DBSnp ID of known SNP">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=AA,Number=1,Type=Integer,Description="Reads presenting a A for this position">
+##FORMAT=<ID=CA,Number=1,Type=Integer,Description="Reads presenting a C for this position">
+##FORMAT=<ID=GA,Number=1,Type=Integer,Description="Reads presenting a G for this position">
+##FORMAT=<ID=TA,Number=1,Type=Integer,Description="Reads presenting a T for this position">
+##FORMAT=<ID=PM,Number=1,Type=Float,Description="Proportion of mut allele">
+##SAMPLE=<ID=NORMAL,Description="Normal",Accession=1234567,Platform=<HiSeq,GAII>,Protocol=genomic,SampleName=PDtestb>
+##SAMPLE=<ID=TUMOUR,Description="Mutant",Accession=1234568,Platform=HiSeq,Protocol=genomic,SampleName=PDtesta>
+##FILTER=<ID=DTH,Description="Less than 1/3 mutant alleles were >= 25 base quality">
+##FILTER=<ID=RP,Description="Coverage was less than 8 and no mutant alleles were found in the first 2/3 of a read (shifted 0.08 from the start and extended 0.08 more than 2/3 of the read length)">
+##FILTER=<ID=MN,Description="More than 0.05 of mutant alleles that were >= 15 base quality found in the matched normal">
+##FILTER=<ID=PT,Description="Mutant alleles all on one direction of read (1rd allowed on opposite strand) and in second half of the read. Second half of read contains the motif GGC[AT]G in sequenced orientation and the mean base quality of all bases after the motif was less than 20">
+##FILTER=<ID=GI,Description="Position falls within a germline indel using the supplied bed file">
+##FILTER=<ID=MQ,Description="Mean mapping quality of the mutant allele reads was < 21">
+##FILTER=<ID=SR,Description="Position falls within a simple repeat using the supplied bed file">
+##FILTER=<ID=CR,Description="Position falls within a centromeric repeat using the supplied bed file">
+##FILTER=<ID=PH,Description="Mutant reads were on one strand (permitted proportion on other strand: 0.04), and mean mutant base quality was less than 21">
+##FILTER=<ID=VUM,Description="Position has >= 3 mutant allele present in at least 1 percent unmatched normal samples in the unmatched VCF.">
+##FILTER=<ID=SE,Description="Coverage is >= 10 on each strand but mutant allele is only present on one strand">
+##FILTER=<ID=MNP,Description="Tumour sample mutant allele proportion - normal sample mutant allele proportion < 0.2">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NORMAL	TUMOUR
+15	22095504	.	G	A	.	PT	DP=22;MP=8.4e-01;GP=1.5e-01;TG=GG/AG;TP=8.1e-01;SG=AG/GG;SP=7.8e-02	GT:AA:CA:GA:TA:PM	0|0:0:0:9:0:0.0e+00	0|1:4:0:9:0:3.1e-01
+17	3989655	.	G	C	.	SE;DTH	DP=57;MP=8.2e-01;GP=2.7e-06;TG=GG/CG;TP=8.2e-01;SG=GG/GG;SP=1.8e-01	GT:AA:CA:GA:TA:PM	0|0:0:0:29:0:0.0e+00	0|1:0:4:24:0:1.4e-01
