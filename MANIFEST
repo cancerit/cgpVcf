@@ -1,8 +1,12 @@
+bin/cgpAppendIdsToVcf.pl
+bin/cgpVCFSplit.pl
 docs.tar.gz
 INSTALL
 lib/Sanger/CGP/Vcf.pm
 lib/Sanger/CGP/Vcf/BamUtil.pm
 lib/Sanger/CGP/Vcf/Contig.pm
+lib/Sanger/CGP/Vcf/OutputGen/SequentialIdGenerator.pm
+lib/Sanger/CGP/Vcf/OutputGen/UuIdGenerator.pm
 lib/Sanger/CGP/Vcf/Sample.pm
 lib/Sanger/CGP/Vcf/VCFCNConverter.pm
 lib/Sanger/CGP/Vcf/VcfProcessLog.pm
@@ -18,8 +22,12 @@ prerelease.sh
 README.md
 setup.sh
 t/1_pm_compile.t
+t/2_pl_compile.t
+t/cgpAppendIdsToVcf.t
+t/cgpVCFSplit.t
 t/VCFCNConverter.t
 t/VcfUtil.t
+testData/exp_header.vcf
 testData/genome_22.fa
 testData/genome_22.fa.fai
 testData/test_segments.txt
@@ -28,3 +36,4 @@ testData/TESTMUT.bam
 testData/TESTMUT.bam.bai
 testData/TESTNORM.bam
 testData/TESTNORM.bam.bai
+testData/vcfForSplit.vcf
