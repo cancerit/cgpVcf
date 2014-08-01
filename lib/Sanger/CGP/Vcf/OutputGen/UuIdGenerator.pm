@@ -1,4 +1,4 @@
-package Sanger::CGP::Vcf;
+package Sanger::CGP::Vcf::OutputGen::UuIdGenerator;
 
 ##########LICENCE##########
 # Copyright (c) 2014 Genome Research Ltd.
@@ -21,10 +21,28 @@ package Sanger::CGP::Vcf;
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 ##########LICENCE##########
 
+use Sanger::CGP::Vcf;
 
 use strict;
-use Const::Fast qw(const);
-
-our $VERSION = '1.2.0';
+use Data::UUID;
 
 1;
+
+sub new{
+	my $proto = shift;
+	my (%args) = @_;
+	my $class = ref($proto) || $proto;
+
+	my $self = {
+		_gen => new Data::UUID,
+	};
+    bless $self, $class;
+    return $self;
+}
+
+sub next{
+	my $gen = shift->{_gen};
+	return lc $gen->to_string($gen->create);
+}
+
+sub reset{}

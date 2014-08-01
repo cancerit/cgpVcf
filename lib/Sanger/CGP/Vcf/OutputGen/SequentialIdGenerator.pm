@@ -1,4 +1,4 @@
-package Sanger::CGP::Vcf;
+package Sanger::CGP::Vcf::OutputGen::SequentialIdGenerator;
 
 ##########LICENCE##########
 # Copyright (c) 2014 Genome Research Ltd.
@@ -21,10 +21,28 @@ package Sanger::CGP::Vcf;
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 ##########LICENCE##########
 
+use Sanger::CGP::Vcf;
 
 use strict;
-use Const::Fast qw(const);
-
-our $VERSION = '1.2.0';
 
 1;
+
+sub new{
+	my $proto = shift;
+	my (%args) = @_;
+	my $class = ref($proto) || $proto;
+
+	my $self = {
+		_counter => $args{'-start'} || 1,
+	};
+    bless $self, $class;
+    return $self;
+}
+
+sub next{
+	return shift->{_counter}++;
+}
+
+sub reset{
+	shift->{_counter} = shift;
+}
