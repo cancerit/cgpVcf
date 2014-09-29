@@ -22,6 +22,7 @@ package Sanger::CGP::Vcf::VCFCNConverter;
 ##########LICENCE##########
 
 use strict;
+use warnings FATAL => 'all';
 use Sanger::CGP::Vcf::VcfUtil;
 use Sanger::CGP::Vcf;
 use Const::Fast qw(const);
