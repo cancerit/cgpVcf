@@ -18,6 +18,7 @@ MANIFEST.SKIP
 patches/tabixPerlLinker.diff
 patches/vcfToolsInstLocs.diff
 patches/vcfToolsProcessLog.diff
+perltidy.LOG
 prerelease.sh
 README.md
 setup.sh

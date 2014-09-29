@@ -1,4 +1,4 @@
-#! /usr/bin/perl
+#!/usr/bin/perl
 
 ##########LICENCE##########
 # Copyright (c) 2014 Genome Research Ltd.
@@ -22,7 +22,7 @@
 ##########LICENCE##########
 
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 
 use Getopt::Long;
 use Pod::Usage;

@@ -25,6 +25,7 @@ use Sanger::CGP::Vcf;
 
 use strict;
 use Data::UUID;
+use warnings FATAL => 'all';
 
 1;
 

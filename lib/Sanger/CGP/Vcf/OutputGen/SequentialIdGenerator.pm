@@ -24,6 +24,7 @@ package Sanger::CGP::Vcf::OutputGen::SequentialIdGenerator;
 use Sanger::CGP::Vcf;
 
 use strict;
+use warnings FATAL => 'all';
 
 1;
 

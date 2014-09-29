@@ -22,6 +22,7 @@ package Sanger::CGP::Vcf::BamUtil;
 ##########LICENCE##########
 
 use strict;
+use warnings FATAL => 'all';
 use Sanger::CGP::Vcf;
 use Carp;
 
