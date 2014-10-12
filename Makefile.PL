@@ -26,9 +26,11 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
   NAME          => 'cgpVcf',
+  LICENSE       => 'agpl_3', # http://search.cpan.org/~dagolden/CPAN-Meta-2.142690/lib/CPAN/Meta/Spec.pm#license
   VERSION_FROM  => 'lib/Sanger/CGP/Vcf.pm',
   EXE_FILES     => [qw( bin/cgpAppendIdsToVcf.pl )],
   PREREQ_PM     => {
                      'Const::Fast' => 0.014,
+                     'DateTime' => 1.12,
                    }
 );
