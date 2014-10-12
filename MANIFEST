@@ -1,5 +1,6 @@
 bin/cgpAppendIdsToVcf.pl
 bin/cgpVCFSplit.pl
+bin/cpanm
 docs.tar.gz
 INSTALL
 lib/Sanger/CGP/Vcf.pm
