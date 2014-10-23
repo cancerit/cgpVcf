@@ -107,6 +107,9 @@ sub generate_record{
   $ret .= 'SVTYPE='.$CNV.';';
   $ret .= 'END='.$end.$SEP;
 
+  # format string
+  $ret .= $FORMAT.$SEP;
+
   #Normal sample section
   $ret .= './.:'.$wt_cn_tot.':'.$wt_cn_min.$SEP;
   #Tumour sample section

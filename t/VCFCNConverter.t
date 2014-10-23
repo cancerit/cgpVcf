@@ -119,7 +119,7 @@ subtest 'Generate Record tests' => sub{
 
   my $EXP_RECORD = "$chr\t$start\t.\t$start_allele\t<CNV>\t.\t.\t".
                     "SVTYPE=CNV;END=$end\t".
-                    "./.:3:2\t./.:5:4\n";
+                    "GT:TCN:MCN\t./.:3:2\t./.:5:4\n";
 
   my $record = $converter->generate_record($chr,$start,$end,$start_allele,$wt_cn_tot,$wt_cn_min,$mt_cn_tot,$mt_cn_min);
 
