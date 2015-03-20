@@ -1,9 +1,9 @@
 #!/bin/bash
 
-##########LICENCE##########
-# Copyright (c) 2014 Genome Research Ltd.
+########## LICENCE ##########
+# Copyright (c) 2014,2015 Genome Research Ltd.
 #
-# Author: Jon Hinton <cgpit@sanger.ac.uk>
+# Author: Cancer Genome Project <cgpit@sanger.ac.uk>
 #
 # This file is part of cgpVcf.
 #
@@ -19,7 +19,17 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
-##########LICENCE##########
+#
+# 1. The usage of a range of years within a copyright statement contained within
+# this distribution should be interpreted as being equivalent to a list of years
+# including the first and last year specified and all consecutive years between
+# them. For example, a copyright statement that reads ‘Copyright (c) 2005, 2007-
+# 2009, 2011-2012’ should be interpreted as being identical to a statement that
+# reads ‘Copyright (c) 2005, 2007, 2008, 2009, 2011, 2012’ and a copyright
+# statement that reads ‘Copyright (c) 2005-2012’ should be interpreted as being
+# identical to a statement that reads ‘Copyright (c) 2005, 2006, 2007, 2008,
+# 2009, 2010, 2011, 2012’."
+########## LICENCE ##########
 
 
 SOURCE_TABIX="http://sourceforge.net/projects/samtools/files/tabix/tabix-0.2.6.tar.bz2/download"
@@ -58,6 +68,15 @@ get_distro () {
   mkdir -p $1
   `$DECOMP $1.$EXT`
   tar --strip-components 1 -C $1 -xf $1.tar
+}
+
+get_file () {
+# output, source
+  if hash curl 2>/dev/null; then
+    curl --insecure -sS -o $1 -L $2
+  else
+    wget -nv -O $1 $2
+  fi
 }
 
 if [ "$#" -ne "1" ] ; then
@@ -112,6 +131,11 @@ export PERL5LIB="$PERLROOT:$PERLARCH"
 #create a location to build dependencies
 SETUP_DIR=$INIT_DIR/install_tmp
 mkdir -p $SETUP_DIR
+
+## grab cpanm:
+rm -f $SETUP_DIR/cpanm
+get_file $SETUP_DIR/cpanm http://xrl.us/cpanm
+chmod +x $SETUP_DIR/cpanm
 
 cd $SETUP_DIR
 
@@ -171,7 +195,7 @@ if ! ( perl -MExtUtils::MakeMaker -e 1 >/dev/null 2>&1); then
 fi
 (
   set -x
-  $INIT_DIR/bin/cpanm -v --mirror http://cpan.metacpan.org --notest -l $INST_PATH/ --installdeps . < /dev/null
+  $SETUP_DIR/cpanm -v --mirror http://cpan.metacpan.org --notest -l $INST_PATH/ --installdeps . < /dev/null
   set +x
 ) >>$INIT_DIR/setup.log 2>&1
 done_message "" "Failed during installation of core dependencies."
