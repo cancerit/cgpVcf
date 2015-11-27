@@ -97,11 +97,13 @@ sub parse_samples{
       my $platform;
       if($line =~ /PL:([^\t]+)/) {
         $platform = $1;
-        die "ERROR: Manually entered platform ($platform_in) doesn't match BAM file header ($platform)" if(defined $platform && $platform ne $platform_in);
+        die "ERROR: Manually entered platform ($platform_in) doesn't match BAM file header ($platform)" if(defined $platform_in && defined $platform && $platform ne $platform_in);
       }
       else {
         $platform = $platform_in;
       }
+
+      die "ERROR: PL tag not defined in BAM header and *platform* was not provided to program (sample $name)\n" unless(defined $platform);
 
       $samples->{$name} = new Sanger::CGP::Vcf::Sample(
         -name => $name,
