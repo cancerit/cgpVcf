@@ -36,6 +36,6 @@ use strict;
 use warnings;
 use Const::Fast qw(const);
 
-our $VERSION = '1.2.3';
+our $VERSION = '1.2.5';
 
 1;
