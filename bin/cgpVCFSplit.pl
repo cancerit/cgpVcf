@@ -145,10 +145,11 @@ sub validateInput {
     print "Version: $VERSION\n";
     exit;
   }
+  pod2usage("Incorrect parameters:") unless(defined($opts->{'f'}) && defined($opts->{'l'}) && defined($opts->{'o'}));
   unless(-e $opts->{'f'} && -r $opts->{'f'}){
   	pod2usage("VCF file to split does not exist or has incorrect permissions: ".$opts->{'f'}."\n");
   }
-  pod2usage("Incorrect parameters:") unless(defined($opts->{'f'}) && defined($opts->{'l'}) && defined($opts->{'o'}));
+  
 
   return;
 }

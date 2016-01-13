@@ -20,4 +20,4 @@ no_index:
 requires:
   Const::Fast: '0.014'
   DateTime: '1.12'
-version: v1.2.5
+version: v1.2.6
