@@ -79,16 +79,23 @@ get_file () {
   fi
 }
 
-if [ "$#" -ne "1" ] ; then
-  echo "Please provide an installation path  such as /opt/pancan"
+if [[ ($# -ne 1 && $# -ne 2) ]] ; then
+  echo "Please provide an installation path and optionally perl lib paths to allow, e.g."
+  echo "  ./setup.sh /opt/myBundle"
+  echo "OR all elements versioned:"
+  echo "  ./setup.sh /opt/cgpVcf-X.X.X /opt/PCAP-X.X.X/lib/perl"
   exit 0
 fi
 
 INST_PATH=$1
 
+if [[ $# -eq 2 ]] ; then
+  CGP_PERLLIBS=$2
+fi
+
 CPU=`grep -c ^processor /proc/cpuinfo`
-if [ $? -eq 0 ]; then
-  if [ "$CPU" -gt "6" ]; then
+if [[ $? -eq 0 ]]; then
+  if [[ $CPU -gt 6 ]]; then
     CPU=6
   fi
 else
@@ -122,11 +129,12 @@ INST_PATH=`pwd`
 cd $INIT_DIR
 
 # make sure that build is self contained
-unset PERL5LIB
-ARCHNAME=`perl -e 'use Config; print $Config{archname};'`
 PERLROOT=$INST_PATH/lib/perl5
-PERLARCH=$PERLROOT/$ARCHNAME
-export PERL5LIB="$PERLROOT:$PERLARCH"
+if [ -z ${CGP_PERLLIBS+x} ]; then
+  export PERL5LIB="$PERLROOT"
+else
+  export PERL5LIB="$PERLROOT:$CGP_PERLLIBS"
+fi
 
 #create a location to build dependencies
 SETUP_DIR=$INIT_DIR/install_tmp

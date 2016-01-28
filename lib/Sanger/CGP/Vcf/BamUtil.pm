@@ -100,11 +100,13 @@ sub parse_samples{
         if(defined $platform && $platform ne $platform_in){
           $platform = $platform_in;
           warn "Manually entered platform ($platform_in) doesn't match BAM file header ($platform). Overriding with manual platform ($platform_in)\n" ;
-        }        
+        }
       }
       else {
         $platform = $platform_in;
       }
+
+      die "ERROR: PL tag not defined in BAM header and *platform* was not provided to program (sample $name)\n" unless(defined $platform);
 
       $samples->{$name} = new Sanger::CGP::Vcf::Sample(
         -name => $name,
