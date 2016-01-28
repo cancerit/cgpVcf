@@ -97,7 +97,7 @@ sub parse_samples{
       my $platform;
       if($line =~ /PL:([^\t]+)/) {
         $platform = $1;
-        if(defined $platform && $platform ne $platform_in){
+        if(defined $platform && defined $platform_in && $platform ne $platform_in){
           $platform = $platform_in;
           warn "Manually entered platform ($platform_in) doesn't match BAM file header ($platform). Overriding with manual platform ($platform_in)\n" ;
         }
