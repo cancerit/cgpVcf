@@ -64,6 +64,13 @@ sub new{
 sub init{
 	my($self,%args) = @_;
 	$self->{_contigs} = $args{-contigs};
+	$self->{'_extended_format'} = 0;
+}
+
+sub extended_cn {
+  my ($self, $val) = @_;
+  $self->{'_extended_format'} = $val if(defined $val);
+  return $self->{'_extended_format'};
 }
 
 =head generate_header
@@ -97,13 +104,19 @@ sub generate_header{
 		{key => 'FORMAT', ID => 'TCN', Number => 1, Type => 'Integer', Description => 'Total copy number'},
 		{key => 'FORMAT', ID => 'MCN', Number => 1, Type => 'Integer', Description => 'Minor allele copy number'},
 	];
+  if($self->extended_cn) {
+    push @{$format},  {key => 'FORMAT', ID => 'FCF', Number => 1, Type => 'Float', Description => 'Fraction Cells first state'},
+                      {key => 'FORMAT', ID => 'TCS', Number => 1, Type => 'Integer', Description => 'Total copy number second state'},
+                      {key => 'FORMAT', ID => 'MCS', Number => 1, Type => 'Integer', Description => 'Minor allele copy number second state'},
+                      {key => 'FORMAT', ID => 'FCS', Number => 1, Type => 'Float', Description => 'Fraction Cells second state'},
+  }
 
 	return Sanger::CGP::Vcf::VcfUtil::gen_tn_vcf_header( $wt_sample, $mt_sample, $contigs, $process_logs, $reference_name, $input_source, $info, $format, []);
 }
 
 
 sub generate_record{
-  my ($self,$chr,$start,$end,$start_allele,$wt_cn_tot,$wt_cn_min,$mt_cn_tot,$mt_cn_min) = @_;
+  my ($self,$chr,$start,$end,$start_allele,$wt_cn_tot,$wt_cn_min,$mt_cn_tot,$mt_cn_min, $extended) = @_;
   # CHR POS ID REF ALT QUAL FILTER INFO FORMAT GENOSTUFF GENOSTUFF
   my $ret = $chr.$SEP; #chromsome
 	$ret .= $start.$SEP; #Position (start for CNV)
@@ -118,12 +131,33 @@ sub generate_record{
   $ret .= 'END='.$end.$SEP;
 
   # format string
-  $ret .= $FORMAT.$SEP;
+  $ret .= $FORMAT;
+  if($self->extended_cn) {
+    $ret .= ':FCF:TCS:MCS:FCS';
+  }
+  $ret .= $SEP;
 
   #Normal sample section
-  $ret .= './.:'.$wt_cn_tot.':'.$wt_cn_min.$SEP;
+  $ret .= './.:'.$wt_cn_tot.':'.$wt_cn_min;
+  if($self->extended_cn) {
+    die "ERROR: extended_cn option set but no extended data provided\n" unless(defined $extended);
+    $ret .= ':.';
+    $ret .= ':.';
+    $ret .= ':.';
+    $ret .= ':.';
+  }
+  $ret .= $SEP;
+
   #Tumour sample section
-  $ret .= './.:'.$mt_cn_tot.':'.$mt_cn_min.$NL;
+  $ret .= './.:'.$mt_cn_tot.':'.$mt_cn_min;
+  if($self->extended_cn) {
+    die "ERROR: extended_cn option set but no extended data provided\n" unless(defined $extended);
+    $ret .= ':'.$extended->{'mt_fcf'};
+    $ret .= ':'.$extended->{'mt_tcs'};
+    $ret .= ':'.$extended->{'mt_mcs'};
+    $ret .= ':'.$extended->{'mt_fcs'};
+  }
+  $ret .= $NL;
   return $ret;
 }
 return 1;

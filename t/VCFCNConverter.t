@@ -105,8 +105,34 @@ subtest 'Generate Header tests' => sub{
 
   my $converter = Sanger::CGP::Vcf::VCFCNConverter->new(-contigs => $contigs);
   my $head = $converter->generate_header($wt_sample, $mt_sample, $process_logs, $ref_name, $source);
-  ok($head eq $EXP_HEADER, 'Compare headers');
+  is($head, $EXP_HEADER, 'Compare headers');
 
+  # extended headers test
+  my $EXTENDED_HEADER =  "##fileformat=VCFv4.1\n".
+                    "##fileDate=".Sanger::CGP::Vcf::VcfUtil->get_date()."\n".
+                    "##source_".Sanger::CGP::Vcf::VcfUtil->get_date().".1=".$source."\n".
+                    "##reference=".$ref_name."\n".
+                    "##contig=<ID=1,assembly=TEST_ASS,length=12345,species=TEST_SPP>\n".
+                    "##INFO=<ID=END,Number=1,Type=Integer,Description=\"End position of this structural variant\">\n".
+                    "##INFO=<ID=SVTYPE,Number=1,Type=String,Description=\"Type of structural variant\">\n".
+                    "##ALT=<ID=CNV,Description=\"Copy number variable region\">\n".
+                    "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n".
+                    "##FORMAT=<ID=TCN,Number=1,Type=Integer,Description=\"Total copy number\">\n".
+                    "##FORMAT=<ID=MCN,Number=1,Type=Integer,Description=\"Minor allele copy number\">\n".
+                    "##FORMAT=<ID=FCF,Number=1,Type=Float,Description=\"Fraction Cells first state\">\n".
+                    "##FORMAT=<ID=TCS,Number=1,Type=Integer,Description=\"Total copy number second state\">\n".
+                    "##FORMAT=<ID=MCS,Number=1,Type=Integer,Description=\"Minor allele copy number second state\">\n".
+                    "##FORMAT=<ID=FCS,Number=1,Type=Float,Description=\"Fraction Cells second state\">\n".
+
+                    "##vcfProcessLog_".Sanger::CGP::Vcf::VcfUtil->get_date().".1=<InputVCFSource=<$source>,InputVCFVer=<".Sanger::CGP::Vcf->VERSION.">>\n".
+                    "##SAMPLE=<ID=NORMAL,Accession=5,Platform=HISEQ,Protocol=PROT,SampleName=TEST_NORM,Source=SRC,Study=2>\n".
+                    "##SAMPLE=<ID=TUMOUR,Accession=4,Platform=HISEQ,Protocol=PROT,SampleName=TEST_MUT,Source=SRC,Study=3>\n".
+                    "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tNORMAL\tTUMOUR\n";
+
+  $converter = Sanger::CGP::Vcf::VCFCNConverter->new(-contigs => $contigs);
+  $converter->extended_cn(1);
+  $head = $converter->generate_header($wt_sample, $mt_sample, $process_logs, $ref_name, $source);
+  is($head, $EXTENDED_HEADER, 'Compare extendedheaders');
 };
 
 subtest 'Generate Record tests' => sub{
@@ -133,7 +159,24 @@ subtest 'Generate Record tests' => sub{
 
   my $record = $converter->generate_record($chr,$start,$end,$start_allele,$wt_cn_tot,$wt_cn_min,$mt_cn_tot,$mt_cn_min);
 
-  ok($record eq $EXP_RECORD, 'Compare record');
+  is($record, $EXP_RECORD, 'Compare record');
+
+  $converter = Sanger::CGP::Vcf::VCFCNConverter->new(-contigs => $contigs);
+  $converter->extended_cn(1);
+
+  my $EXTENDED_RECORD = "$chr\t$start\t.\t$start_allele\t<CNV>\t.\t.\t".
+                        "SVTYPE=CNV;END=$end\t".
+                        "GT:TCN:MCN:FCF:TCS:MCS:FCS\t./.:3:2:.:.:.:.\t./.:5:4:0.6:6:3:0.4\n";
+
+  my $extended_data = { 'mt_fcf' => 0.6,
+                        'mt_tcs' => 6,
+                        'mt_mcs' => 3,
+                        'mt_fcs' => 0.4,
+                        };
+
+  $record = $converter->generate_record($chr,$start,$end,$start_allele,$wt_cn_tot,$wt_cn_min,$mt_cn_tot,$mt_cn_min, $extended_data);
+
+  is($record, $EXTENDED_RECORD, 'Compare extended record');
 };
 
 done_testing();
