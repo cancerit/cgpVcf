@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ########## LICENCE ##########
-# Copyright (c) 2014,2015 Genome Research Ltd.
+# Copyright (c) 2014-2016 Genome Research Ltd.
 #
 # Author: Cancer Genome Project <cgpit@sanger.ac.uk>
 #
@@ -132,7 +132,14 @@ cd $INIT_DIR
 
 # make sure that build is self contained
 PERLROOT=$INST_PATH/lib/perl5
-export PERL5LIB="$PERLROOT"
+
+# allows user to knowingly specify other PERL5LIB areas.
+if [ -z ${CGP_PERLLIBS+x} ]; then
+  export PERL5LIB="$PERLROOT"
+else
+  export PERL5LIB="$PERLROOT:$CGP_PERLLIBS"
+fi
+
 export PATH=$INST_PATH/bin:$PATH
 
 #create a location to build dependencies
