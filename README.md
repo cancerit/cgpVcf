@@ -15,8 +15,9 @@ Some of the code included in this package has dependencies on several C packages
 
 And various perl modules.
 
-Please use `setup.sh` to install the dependencies.  Please be aware that this expects basic C
-compilation libraries and tools to be available.
+Please use `setup.sh` to install the dependencies.  Setting the environment variable `CGP_PERLLIBS` allows you to to append to `PERL5LIB` during install.  Without this all dependancies are installed into the target area.
+
+Please be aware that this expects basic C compilation libraries and tools to be available.
 
 ---
 
