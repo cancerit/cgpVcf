@@ -179,7 +179,7 @@ qq{##fileformat=VCFv4.1
     my $got_line = $got[$i];
     my $exp_line = $expected[$i];
     if($got_line =~ m/^##vcfProcessLog/) {
-      $got_line =~ s/^(##vcfProcessLog)[^=]+/\1/;
+      $got_line =~ s/^(##vcfProcessLog)[^=]+/$1/;
     }
     is($got_line, $exp_line, 'Header lines match');
   }
@@ -191,28 +191,27 @@ qq{##fileformat=VCFv4.1
 sub header_to_hash{
 	my($line) = @_;
 
-	my ($k,$data) = $line =~ /^##(.+)=<()>^/;
+	my ($k,$data) = $line =~ /^##(.+)=<(.+)>$/;
 
 	my $ret = {key => $k};
 
+  my @bits;
+  if(defined $data) {
+	  @bits = split(/,/,$data);
+	}
 
-	my @bits = split(/,/,$data);
-
-	my $fragments = [];
-
-	my $key_gen = 0;
-
+	my @fragments;
 	foreach my $pair (@bits){
 		my($key,$val) = split /=/, $pair;
 
 		unless($val){
-			push @$fragments, $fragments;
+			push @fragments, $pair;
 		}else{
 			$ret->{$key} = $val;
 		}
 	}
 
-	$ret->{'frag'} = $fragments;
+	$ret->{'frag'} = \@fragments;
 }
 
 done_testing();

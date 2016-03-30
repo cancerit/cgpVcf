@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ########## LICENCE ##########
-# Copyright (c) 2014,2015 Genome Research Ltd.
+# Copyright (c) 2014-2016 Genome Research Ltd.
 #
 # Author: Cancer Genome Project <cgpit@sanger.ac.uk>
 #
@@ -31,9 +31,8 @@
 # 2009, 2010, 2011, 2012’."
 ########## LICENCE ##########
 
-
-SOURCE_TABIX="http://sourceforge.net/projects/samtools/files/tabix/tabix-0.2.6.tar.bz2/download"
 SOURCE_VCFTOOLS="http://sourceforge.net/projects/vcftools/files/vcftools_0.1.12a.tar.gz/download"
+SOURCE_SAMTOOLS="https://github.com/samtools/samtools/releases/download/1.3/samtools-1.3.tar.bz2"
 
 done_message () {
     if [ $? -eq 0 ]; then
@@ -50,24 +49,25 @@ done_message () {
 
 get_distro () {
   EXT=""
-  DECOMP="gunzip -f"
+  DECOMP=""
   if [[ $2 == *.tar.bz2* ]] ; then
     EXT="tar.bz2"
-    DECOMP="bzip2 -fd"
+    DECOMP="-j"
   elif [[ $2 == *.tar.gz* ]] ; then
     EXT="tar.gz"
+    DECOMP="-z"
   else
     echo "I don't understand the file type for $1"
     exit 1
   fi
+
   if hash curl 2>/dev/null; then
     curl -sS -o $1.$EXT -L $2
   else
     wget -nv -O $1.$EXT $2
   fi
   mkdir -p $1
-  `$DECOMP $1.$EXT`
-  tar --strip-components 1 -C $1 -xf $1.tar
+  tar --strip-components 1 -C $1 $DECOMP -xf $1.$EXT
 }
 
 get_file () {
@@ -122,6 +122,8 @@ echo > $INIT_DIR/setup.log
     echo; echo
 ) >>$INIT_DIR/setup.log 2>&1
 
+set -e
+
 # cleanup inst_path
 mkdir -p $INST_PATH/bin
 cd $INST_PATH
@@ -130,46 +132,42 @@ cd $INIT_DIR
 
 # make sure that build is self contained
 PERLROOT=$INST_PATH/lib/perl5
+
+# allows user to knowingly specify other PERL5LIB areas.
 if [ -z ${CGP_PERLLIBS+x} ]; then
   export PERL5LIB="$PERLROOT"
 else
   export PERL5LIB="$PERLROOT:$CGP_PERLLIBS"
 fi
 
+export PATH=$INST_PATH/bin:$PATH
+
 #create a location to build dependencies
 SETUP_DIR=$INIT_DIR/install_tmp
 mkdir -p $SETUP_DIR
 
-## grab cpanm:
-rm -f $SETUP_DIR/cpanm
-get_file $SETUP_DIR/cpanm http://xrl.us/cpanm
-chmod +x $SETUP_DIR/cpanm
-
 cd $SETUP_DIR
 
-CURR_TOOL="tabix"
-CURR_SOURCE=$SOURCE_TABIX
+## grab cpanm and stick in workspace, then do a self upgrade into bin:
+get_file $SETUP_DIR/cpanm https://cpanmin.us/
+perl $SETUP_DIR/cpanm -l $INST_PATH App::cpanminus
+CPANM=`which cpanm`
+echo $CPANM
+
+CURR_TOOL="samtools"
+CURR_SOURCE=$SOURCE_SAMTOOLS
 echo -n "Building $CURR_TOOL ..."
 if [ -e $SETUP_DIR/$CURR_TOOL.success ]; then
-  echo -n " previously installed ..."
+  echo -n " previously installed ...";
 else
-  (
-    set -ex
-    get_distro $CURR_TOOL $CURR_SOURCE
-    cd $SETUP_DIR/$CURR_TOOL
-    make -j$CPU
-    cp tabix $INST_PATH/bin/.
-    cp bgzip $INST_PATH/bin/.
-    cd perl
-    patch Makefile.PL < $INIT_DIR/patches/tabixPerlLinker.diff
-    perl Makefile.PL INSTALL_BASE=$INST_PATH
-    make
-    make test
-    make install
-    touch $SETUP_DIR/$CURR_TOOL.success
-  ) >>$INIT_DIR/setup.log 2>&1
+  cd $SETUP_DIR
+  get_distro $CURR_TOOL $CURR_SOURCE
+  cd samtools
+  ./configure --enable-plugins --enable-libcurl --prefix=$INST_PATH
+  make all all-htslib
+  make install install-htslib
+  touch $SETUP_DIR/$CURR_TOOL.success
 fi
-done_message "" "Failed to build $CURR_TOOL."
 
 cd $SETUP_DIR
 
@@ -179,15 +177,12 @@ echo -n "Building $CURR_TOOL ..."
 if [ -e $SETUP_DIR/$CURR_TOOL.success ]; then
   echo -n " previously installed ..."
 else
-  (
-    set -ex
-    get_distro $CURR_TOOL $CURR_SOURCE
-    cd $SETUP_DIR/$CURR_TOOL
-    patch Makefile < $INIT_DIR/patches/vcfToolsInstLocs.diff
-    patch perl/Vcf.pm < $INIT_DIR/patches/vcfToolsProcessLog.diff
-    make -j$CPU PREFIX=$INST_PATH
-    touch $SETUP_DIR/$CURR_TOOL.success
-  ) >>$INIT_DIR/setup.log 2>&1
+  get_distro $CURR_TOOL $CURR_SOURCE
+  cd $SETUP_DIR/$CURR_TOOL
+  patch Makefile < $INIT_DIR/patches/vcfToolsInstLocs.diff
+  patch perl/Vcf.pm < $INIT_DIR/patches/vcfToolsProcessLog.diff
+  make -j$CPU PREFIX=$INST_PATH
+  touch $SETUP_DIR/$CURR_TOOL.success
 fi
 done_message "" "Failed to build $CURR_TOOL."
 
@@ -201,22 +196,15 @@ if ! ( perl -MExtUtils::MakeMaker -e 1 >/dev/null 2>&1); then
     echo
     echo "WARNING: Your Perl installation does not seem to include a complete set of core modules.  Attempting to cope with this, but if installation fails please make sure that at least ExtUtils::MakeMaker is installed.  For most users, the best way to do this is to use your system's package manager: apt, yum, fink, homebrew, or similar."
 fi
-(
-  set -x
-  $SETUP_DIR/cpanm -v --mirror http://cpan.metacpan.org --notest -l $INST_PATH/ --installdeps . < /dev/null
-  set +x
-) >>$INIT_DIR/setup.log 2>&1
+$CPANM --mirror http://cpan.metacpan.org --notest -l $INST_PATH/ --installdeps . < /dev/null
 done_message "" "Failed during installation of core dependencies."
 
 echo -n "Installing cgpVcf ..."
-(
-  set -e
-  cd $INIT_DIR
-  perl Makefile.PL INSTALL_BASE=$INST_PATH
-  make
-  make test
-  make install
-) >>$INIT_DIR/setup.log 2>&1
+cd $INIT_DIR
+perl Makefile.PL INSTALL_BASE=$INST_PATH
+make
+make test
+make install
 done_message "" "cgpVcf install failed."
 
 # cleanup all junk
