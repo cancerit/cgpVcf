@@ -1,4 +1,4 @@
-### NEXT
+### v2.0.0
 * Removed use of legacy Tabix codebase and switches to samtools 1.2+
 * Several bugfixes
 
