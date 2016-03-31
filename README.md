@@ -11,7 +11,7 @@ It primarily exists to prevent code duplication between some other projects.
 Some of the code included in this package has dependencies on several C packages:
 
  * [samtools v1.2+](https://github.com/samtools/samtools)
- * [vcftools](http://vcftools.sourceforge.net/)
+ * [vcftools](https://vcftools.github.io/)
 
 And various perl modules.
 

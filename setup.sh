@@ -31,7 +31,7 @@
 # 2009, 2010, 2011, 2012’."
 ########## LICENCE ##########
 
-SOURCE_VCFTOOLS="http://sourceforge.net/projects/vcftools/files/vcftools_0.1.12a.tar.gz/download"
+SOURCE_VCFTOOLS="https://github.com/vcftools/vcftools/releases/download/v0.1.14/vcftools-0.1.14.tar.gz"
 SOURCE_SAMTOOLS="https://github.com/samtools/samtools/releases/download/1.3/samtools-1.3.tar.bz2"
 
 done_message () {
@@ -140,6 +140,7 @@ else
   export PERL5LIB="$PERLROOT:$CGP_PERLLIBS"
 fi
 
+#add bin path for install tests
 export PATH=$INST_PATH/bin:$PATH
 
 #create a location to build dependencies
@@ -178,16 +179,14 @@ if [ -e $SETUP_DIR/$CURR_TOOL.success ]; then
   echo -n " previously installed ..."
 else
   get_distro $CURR_TOOL $CURR_SOURCE
-  cd $SETUP_DIR/$CURR_TOOL
-  patch Makefile < $INIT_DIR/patches/vcfToolsInstLocs.diff
-  patch perl/Vcf.pm < $INIT_DIR/patches/vcfToolsProcessLog.diff
-  make -j$CPU PREFIX=$INST_PATH
+  cd $SETUP_DIR/$CURR_TOOL && \
+  patch src/perl/Vcf.pm < $INIT_DIR/patches/vcfToolsProcessLog.diff && \
+  ./configure --prefix=$INST_PATH --with-pmdir=$INST_PATH/lib/perl5 && \
+  make -j$CPU && \
+  make install && \
   touch $SETUP_DIR/$CURR_TOOL.success
 fi
 done_message "" "Failed to build $CURR_TOOL."
-
-#add bin path for install tests
-export PATH="$INST_PATH/bin:$PATH"
 
 cd $INIT_DIR
 
