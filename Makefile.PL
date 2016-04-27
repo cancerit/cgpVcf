@@ -43,5 +43,6 @@ WriteMakefile(
   PREREQ_PM     => {
                      'Const::Fast' => 0.014,
                      'DateTime' => 1.12,
+                     'Data::UUID' => 1.219,
                    }
 );
