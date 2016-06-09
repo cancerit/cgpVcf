@@ -50,21 +50,21 @@ sub parse_contigs{
       my ($assembly) = $line =~ /AS:([^\t]+)/;
       my ($species) = $line =~ /SP:([^\t]+)/;
 
-      if(defined $man_species) {
-        if(defined $species) {
-          die "ERROR: Manually entered species ($man_species) doesn't match BAM file header ($species)\n"
-            if($man_species ne $species);
-        }
-        else { $species = $man_species; }
+      if(defined $species && defined $man_species && $man_species ne $species) {
+        $species = $man_species;
+        warn "Manually entered species ($man_species) doesn't match BAM file header ($species). Overriding with manual species ($man_species)\n" ;
+      }
+      else {
+        $species = $man_species;
       }
       die "ERROR: Species must be defined, check options/BAM header\n" unless(defined $species);
 
-      if(defined $man_assembly) {
-        if(defined $assembly) {
-          die "ERROR: Manually entered assembly ($man_assembly) doesn't match BAM file header ($assembly)\n"
-            if($man_assembly ne $assembly);
-        }
-        else { $assembly = $man_assembly; }
+      if(defined $assembly && defined $man_assembly && $man_assembly ne $assembly) {
+        $assembly = $man_assembly;
+        warn "Manually entered assembly ($man_assembly) doesn't match BAM file header ($assembly). Overriding with manual assembly ($man_assembly)\n" ;
+      }
+      else {
+        $assembly = $man_assembly;
       }
       die "ERROR: Assembly must be defined, check options/BAM header\n" unless(defined $assembly);
 
