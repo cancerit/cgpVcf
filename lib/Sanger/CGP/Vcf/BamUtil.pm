@@ -55,7 +55,7 @@ sub parse_contigs{
         warn "Manually entered species ($man_species) doesn't match BAM file header ($species). Overriding with manual species ($man_species)\n" ;
       }
       else {
-        $species = $man_species;
+        $species = $man_species if(defined $man_species);
       }
       die "ERROR: Species must be defined, check options/BAM header\n" unless(defined $species);
 
@@ -64,7 +64,7 @@ sub parse_contigs{
         warn "Manually entered assembly ($man_assembly) doesn't match BAM file header ($assembly). Overriding with manual assembly ($man_assembly)\n" ;
       }
       else {
-        $assembly = $man_assembly;
+        $assembly = $man_assembly if(defined $man_assembly);
       }
       die "ERROR: Assembly must be defined, check options/BAM header\n" unless(defined $assembly);
 
