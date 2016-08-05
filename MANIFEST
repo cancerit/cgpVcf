@@ -1,3 +1,4 @@
+.travis.yml
 bin/cgpAppendIdsToVcf.pl
 bin/cgpVCFSplit.pl
 CHANGES.md

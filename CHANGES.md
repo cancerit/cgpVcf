@@ -1,4 +1,11 @@
-### v2.0.0
+### v2.1.0
+* Updates to samtools 1.3.1
+* Adds travis-ci
+
+### v2.0.3
+* Update to samtools 1.3
+
+### v2.0.0/1
 * Removed use of legacy Tabix codebase and switches to samtools 1.2+
 * Several bugfixes
 
