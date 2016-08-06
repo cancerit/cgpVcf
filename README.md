@@ -5,6 +5,10 @@ cgpVcf contains a set of common perl utilities for generating consistent Vcf hea
 
 It primarily exists to prevent code duplication between some other projects.
 
+| Master | Dev |
+|---|---|
+|  [![Build Status](https://travis-ci.org/cancerit/cgpVcf.svg?branch=master)](https://travis-ci.org/cancerit/cgpVcf) | [![Build Status](https://travis-ci.org/cancerit/cgpVcf.svg?branch=dev)](https://travis-ci.org/cancerit/cgpVcf) |
+
 ---
 
 ###Dependencies/Install
