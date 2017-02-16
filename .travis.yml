@@ -10,11 +10,9 @@ addons:
   packages:
    - build-essential
    - autoconf
-   - curl
+   - pkg-config
    - zlib1g-dev
-   - libncurses5-dev
-   - libpstreams-dev
-   - libcurl4-openssl-dev
+   - curl
 
 install: true
 
