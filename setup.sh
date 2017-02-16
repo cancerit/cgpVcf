@@ -32,7 +32,6 @@
 ########## LICENCE ##########
 
 SOURCE_VCFTOOLS="https://github.com/vcftools/vcftools/releases/download/v0.1.14/vcftools-0.1.14.tar.gz"
-SOURCE_SAMTOOLS="https://github.com/samtools/samtools/releases/download/1.3.1/samtools-1.3.1.tar.bz2"
 
 done_message () {
     if [ $? -eq 0 ]; then
@@ -154,21 +153,6 @@ get_file $SETUP_DIR/cpanm https://cpanmin.us/
 perl $SETUP_DIR/cpanm -l $INST_PATH App::cpanminus
 CPANM=`which cpanm`
 echo $CPANM
-
-CURR_TOOL="samtools"
-CURR_SOURCE=$SOURCE_SAMTOOLS
-echo -n "Building $CURR_TOOL ..."
-if [ -e $SETUP_DIR/$CURR_TOOL.success ]; then
-  echo -n " previously installed ...";
-else
-  cd $SETUP_DIR
-  get_distro $CURR_TOOL $CURR_SOURCE
-  cd samtools
-  ./configure --enable-plugins --enable-libcurl --prefix=$INST_PATH
-  make all all-htslib
-  make install install-htslib
-  touch $SETUP_DIR/$CURR_TOOL.success
-fi
 
 cd $SETUP_DIR
 
