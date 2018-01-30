@@ -1,5 +1,4 @@
-cgpVcf
-======
+# cgpVcf
 
 cgpVcf contains a set of common perl utilities for generating consistent Vcf headers.
 
@@ -11,7 +10,7 @@ It primarily exists to prevent code duplication between some other projects.
 
 ---
 
-###Dependencies/Install
+## Dependencies/Install
 Some of the code included in this package has dependencies on several C packages:
 
  * [samtools v1.2+](https://github.com/samtools/samtools)
@@ -25,12 +24,15 @@ Please be aware that this expects basic C compilation libraries and tools to be 
 
 ---
 
-##Creating a release
-####Preparation
+## Creating a release
+
+### Preparation
+
 * Commit/push all relevant changes.
 * Pull a clean version of the repo and use this for the following steps.
 
-####Cutting the release
+### Cutting the release
+
 1. Update `lib/Sanger/CGP/Vcf.pm` to the correct version (adding rc/beta to end if applicable).
 2. Update `CHANGES.md` to show major items.
 3. Run `./prerelease.sh`
@@ -39,10 +41,10 @@ Please be aware that this expects basic C compilation libraries and tools to be 
 6. Push commits.
 7. Use the GitHub tools to draft a release.
 
-LICENCE
-=======
+## LICENCE
 
-Copyright (c) 2014-2016 Genome Research Ltd.
+```
+Copyright (c) 2014-2018 Genome Research Ltd.
 
 Author: Cancer Genome Project <cgpit@sanger.ac.uk>
 
@@ -70,3 +72,4 @@ reads ‘Copyright (c) 2005, 2007, 2008, 2009, 2011, 2012’ and a copyright
 statement that reads ‘Copyright (c) 2005-2012’ should be interpreted as being
 identical to a statement that reads ‘Copyright (c) 2005, 2006, 2007, 2008,
 2009, 2010, 2011, 2012’."
+```
