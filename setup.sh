@@ -119,7 +119,6 @@ else
   cd $SETUP_DIR/distro
   ./configure --prefix=$INST_PATH --with-pmdir=lib/perl5
   make -j$CPU
-  make -j$CPU test
   make -j$CPU install
   cd $SETUP_DIR
   rm -rf distro/* distro.*
