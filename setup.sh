@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ########## LICENCE ##########
-# Copyright (c) 2014-2016 Genome Research Ltd.
+# Copyright (c) 2014-2018 Genome Research Ltd.
 #
 # Author: Cancer Genome Project <cgpit@sanger.ac.uk>
 #
@@ -31,43 +31,7 @@
 # 2009, 2010, 2011, 2012’."
 ########## LICENCE ##########
 
-SOURCE_VCFTOOLS="https://github.com/vcftools/vcftools/releases/download/v0.1.14/vcftools-0.1.14.tar.gz"
-
-done_message () {
-    if [ $? -eq 0 ]; then
-        echo " done."
-        if [ "x$1" != "x" ]; then
-            echo $1
-        fi
-    else
-        echo " failed.  See setup.log file for error messages." $2
-        echo "    Please check INSTALL file for items that should be installed by a package manager"
-        exit 1
-    fi
-}
-
-get_distro () {
-  EXT=""
-  DECOMP=""
-  if [[ $2 == *.tar.bz2* ]] ; then
-    EXT="tar.bz2"
-    DECOMP="-j"
-  elif [[ $2 == *.tar.gz* ]] ; then
-    EXT="tar.gz"
-    DECOMP="-z"
-  else
-    echo "I don't understand the file type for $1"
-    exit 1
-  fi
-
-  if hash curl 2>/dev/null; then
-    curl -sS -o $1.$EXT -L $2
-  else
-    wget -nv -O $1.$EXT $2
-  fi
-  mkdir -p $1
-  tar --strip-components 1 -C $1 $DECOMP -xf $1.$EXT
-}
+SOURCE_VCFTOOLS="https://github.com/vcftools/vcftools/releases/download/v0.1.15/vcftools-0.1.15.tar.gz"
 
 get_file () {
 # output, source
@@ -105,22 +69,6 @@ echo "Max compilation CPUs set to $CPU"
 # get current directory
 INIT_DIR=`pwd`
 
-# re-initialise log file
-echo > $INIT_DIR/setup.log
-
-# log information about this system
-(
-    echo '============== System information ===='
-    set -x
-    lsb_release -a
-    uname -a
-    sw_vers
-    system_profiler
-    grep MemTotal /proc/meminfo
-    set +x
-    echo; echo
-) >>$INIT_DIR/setup.log 2>&1
-
 set -e
 
 # cleanup inst_path
@@ -149,10 +97,11 @@ mkdir -p $SETUP_DIR
 cd $SETUP_DIR
 
 ## grab cpanm and stick in workspace, then do a self upgrade into bin:
-get_file $SETUP_DIR/cpanm https://cpanmin.us/
-perl $SETUP_DIR/cpanm -l $INST_PATH App::cpanminus
+## INSTALL CPANMINUS
+curl -sSL https://cpanmin.us/ > $SETUP_DIR/cpanm
+perl $SETUP_DIR/cpanm --no-wget --no-interactive --notest --mirror http://cpan.metacpan.org -l $INST_PATH App::cpanminus
+rm -f $SETUP_DIR/cpanm
 CPANM=`which cpanm`
-echo $CPANM
 
 cd $SETUP_DIR
 
@@ -162,15 +111,19 @@ echo -n "Building $CURR_TOOL ..."
 if [ -e $SETUP_DIR/$CURR_TOOL.success ]; then
   echo -n " previously installed ..."
 else
-  get_distro $CURR_TOOL $CURR_SOURCE
-  cd $SETUP_DIR/$CURR_TOOL && \
-  patch src/perl/Vcf.pm < $INIT_DIR/patches/vcfToolsProcessLog.diff && \
-  ./configure --prefix=$INST_PATH --with-pmdir=$INST_PATH/lib/perl5 && \
-  make -j$CPU && \
-  make install && \
+  cd $SETUP_DIR
+  mkdir -p $SETUP_DIR/distro
+  curl -sSL --retry 10 $SOURCE_VCFTOOLS > distro.tar.gz
+  rm -rf distro/*
+  tar --strip-components 2 -C distro -xzf distro.tar.gz
+  cd $SETUP_DIR/distro
+  ./configure --prefix=$INST_PATH --with-pmdir=lib/perl5
+  make -j$CPU
+  make -j$CPU install
+  cd $SETUP_DIR
+  rm -rf distro/* distro.*
   touch $SETUP_DIR/$CURR_TOOL.success
 fi
-done_message "" "Failed to build $CURR_TOOL."
 
 cd $INIT_DIR
 
@@ -180,7 +133,6 @@ if ! ( perl -MExtUtils::MakeMaker -e 1 >/dev/null 2>&1); then
     echo "WARNING: Your Perl installation does not seem to include a complete set of core modules.  Attempting to cope with this, but if installation fails please make sure that at least ExtUtils::MakeMaker is installed.  For most users, the best way to do this is to use your system's package manager: apt, yum, fink, homebrew, or similar."
 fi
 $CPANM --mirror http://cpan.metacpan.org --notest -l $INST_PATH/ --installdeps . < /dev/null
-done_message "" "Failed during installation of core dependencies."
 
 echo -n "Installing cgpVcf ..."
 cd $INIT_DIR
@@ -188,7 +140,6 @@ perl Makefile.PL INSTALL_BASE=$INST_PATH
 make
 make test
 make install
-done_message "" "cgpVcf install failed."
 
 # cleanup all junk
 rm -rf $SETUP_DIR

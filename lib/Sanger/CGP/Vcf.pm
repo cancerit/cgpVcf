@@ -1,7 +1,7 @@
 package Sanger::CGP::Vcf;
 
 ##########LICENCE##########
-# Copyright (c) 2014,2015 Genome Research Ltd.
+# Copyright (c) 2014-2018 Genome Research Ltd.
 #
 # Author: Jon Hinton <cgpit@sanger.ac.uk>
 #
@@ -36,6 +36,6 @@ use strict;
 use warnings;
 use Const::Fast qw(const);
 
-our $VERSION = '2.2.0';
+our $VERSION = '2.2.1';
 
 1;
