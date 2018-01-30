@@ -33,29 +33,6 @@
 
 SOURCE_VCFTOOLS="https://github.com/vcftools/vcftools/releases/download/v0.1.15/vcftools-0.1.15.tar.gz"
 
-get_distro () {
-  EXT=""
-  DECOMP=""
-  if [[ $2 == *.tar.bz2* ]] ; then
-    EXT="tar.bz2"
-    DECOMP="-j"
-  elif [[ $2 == *.tar.gz* ]] ; then
-    EXT="tar.gz"
-    DECOMP="-z"
-  else
-    echo "I don't understand the file type for $1"
-    exit 1
-  fi
-
-  if hash curl 2>/dev/null; then
-    curl -sS -o $1.$EXT -L $2
-  else
-    wget -nv -O $1.$EXT $2
-  fi
-  mkdir -p $1
-  tar --strip-components 1 -C $1 $DECOMP -xf $1.$EXT
-}
-
 get_file () {
 # output, source
   if hash curl 2>/dev/null; then
@@ -120,10 +97,11 @@ mkdir -p $SETUP_DIR
 cd $SETUP_DIR
 
 ## grab cpanm and stick in workspace, then do a self upgrade into bin:
-get_file $SETUP_DIR/cpanm https://cpanmin.us/
-perl $SETUP_DIR/cpanm -l $INST_PATH App::cpanminus
+## INSTALL CPANMINUS
+curl -sSL https://cpanmin.us/ > $SETUP_DIR/cpanm
+perl $SETUP_DIR/cpanm --no-wget --no-interactive --notest --mirror http://cpan.metacpan.org -l $INST_PATH App::cpanminus
+rm -f $SETUP_DIR/cpanm
 CPANM=`which cpanm`
-echo $CPANM
 
 cd $SETUP_DIR
 
@@ -133,11 +111,18 @@ echo -n "Building $CURR_TOOL ..."
 if [ -e $SETUP_DIR/$CURR_TOOL.success ]; then
   echo -n " previously installed ..."
 else
-  get_distro $CURR_TOOL $CURR_SOURCE
-  cd $SETUP_DIR/$CURR_TOOL
-  ./configure --prefix=$INST_PATH --with-pmdir=$INST_PATH/lib/perl5
+  cd $SETUP_DIR
+  mkdir -p $SETUP_DIR/distro
+  curl -sSL --retry 10 $SOURCE_VCFTOOLS > distro.tar.gz
+  rm -rf distro/*
+  tar --strip-components 2 -C distro -xzf distro.tar.gz
+  cd $SETUP_DIR/distro
+  ./configure --prefix=$INST_PATH --with-pmdir=lib/perl5
   make -j$CPU
-  make install
+  make -j$CPU test
+  make -j$CPU install
+  cd $SETUP_DIR
+  rm -rf distro/* distro.*
   touch $SETUP_DIR/$CURR_TOOL.success
 fi
 
@@ -156,7 +141,6 @@ perl Makefile.PL INSTALL_BASE=$INST_PATH
 make
 make test
 make install
-done_message "" "cgpVcf install failed."
 
 # cleanup all junk
 rm -rf $SETUP_DIR
