@@ -1,9 +1,9 @@
-# This Dockerfile imports from PCAP-core so that projects that depend
-# on cgpVcf will have both cgpBigWig and PCAP-core already set. However,
+# This Dockerfile imports from cancerit:pcap-core so that projects that depend
+# on cgpVcf will have both cgpBigWig and PCAP-core already available. However,
 # its important to note that PCAP-core is not a cgpVCF dependency.
 # cgpVcf image without PCAP-core is 585MB, with PCAP-core is 871MB.
 
-# PCAP-core container includes the environment variable OPT,
+# The cancerit:pcap-core container includes the environment variable OPT,
 # this is reused here to install cgpVcf.
 # As such there is no need to update PATH and PERL5LIB.
 

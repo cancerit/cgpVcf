@@ -15,7 +15,7 @@ It primarily exists to prevent code duplication between some other projects.
 - [Contents](#contents)
 - [Installation](#installation)
 - [Contributing](#contributing)
-- [LICENCE](#licence)
+- [License](#license)
 
 # Installation
 
@@ -36,7 +36,7 @@ Setting the environment variable `CGP_PERLLIBS` allows you to to append to `PERL
 
 Contributions are welcome, and they are greatly appreciated, check our [contributing guidelines](CONTROBUTING.md)!
 
-# LICENCE
+# License
 
 ```
 Copyright (c) 2014-2018 Genome Research Ltd.
