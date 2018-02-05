@@ -24,7 +24,7 @@ Set up for local development:
 1. Clone your cookiecutter-cli locally:
 
 
-        git clone https://github.com/cancerit/PCAP-core.git
+        git clone https://github.com/cancerit/cgpVcf.git
 
 
 2. Checkout to development branch:
@@ -40,7 +40,7 @@ Set up for local development:
 
 4. If you contributed a new feature, create a test in:
 
-        PCAP-core/c/c_tests/
+        cgpVcf/t
 
 5. Commit your changes and push your branch to GitHub:
 
@@ -52,7 +52,7 @@ Set up for local development:
 
 ## Bug reports, Feature requests and feedback
 
-Go ahead and file an issue at https://github.com/cancerit/PCAP-core/issues.
+Go ahead and file an issue at https://github.com/cancerit/cgpVcf/issues.
 
 If you are proposing a **feature**:
 
