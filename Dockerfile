@@ -32,7 +32,7 @@ RUN \
 # Install package.
 RUN \
     cd /code && \
-    ./setup.sh /$OPT && \
+    ./setup.sh $OPT && \
     cd ~ && \
     rm -rf /code
 
